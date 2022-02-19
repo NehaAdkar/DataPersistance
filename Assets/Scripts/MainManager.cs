@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
@@ -107,7 +108,7 @@ public class MainManager : MonoBehaviour
 
     public void Reset()
     {
-        highScore=0;
+         SceneManager.LoadScene(0);
     }
 
 
