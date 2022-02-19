@@ -8,28 +8,26 @@ public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
 public static GameManager Instance;
-    public TextMeshProUGUI Score;
-    public TextMeshProUGUI Name;
-    //public TextMeshProUGUI TextAreaUser;
+    public int Score;
+    public string Name;
 
     private void Awake()
     {
-        if(Instance!=null)
-        {
-            Destroy(gameObject);
-            return;
-        }
 
+        
         Instance=this;
         DontDestroyOnLoad(gameObject);
         //LoadScore();
     }
 
+    
+
 [System.Serializable]
 class SaveData
 {
-    public TextMeshProUGUI Score;
-    public TextMeshProUGUI Name;
+    public int Score;
+    public string Name;
+    
 }
 
     public void SaveScore()

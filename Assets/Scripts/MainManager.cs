@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,22 +10,30 @@ public class MainManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
-
+    public string CurrentName;
     public Text ScoreText;
     public GameObject GameOverText;
-    public GameObject NameInput;
-    public GameObject NameEnter;
-    
+    public GameObject TextBox;
     private bool m_Started = false;
     private int m_Points;
     
     private bool m_GameOver = false;
+    public int highScore;
+    public string highScoreName;
 
-    
+    public TextMeshProUGUI BestScoreText;
+    public TMP_InputField InputName;
+
+    public string WinnerName;
+
+
     // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.LoadScore();
+        WinnerName="neha";
+        HighScoreDisplay();
+        
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -47,6 +56,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                HighScoreDisplay();
                 m_Started = true;
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
@@ -60,7 +70,8 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                GameManager.Instance.SaveScore();
+                SceneManager.LoadScene(1);
             }
         }
     }
@@ -74,9 +85,41 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
+        CheckHighScore();
+        HighScoreDisplay();
         GameOverText.SetActive(true);
-        NameEnter.SetActive(true);
-        NameInput.SetActive(true);
         GameManager.Instance.SaveScore();
+    }
+
+    public void HighScoreDisplay()
+    {
+        GameManager.Instance.LoadScore();
+        BestScoreText.text = $"Best Score : {WinnerName} : {highScore}";
+        highScore = GameManager.Instance.Score;
+        highScoreName = GameManager.Instance.Name;
+        
+    }
+
+    public void NameBox()
+    {
+        WinnerName=InputName.text;
+    }
+
+    public void Reset()
+    {
+        highScore=0;
+    }
+
+
+    public void CheckHighScore()
+    {
+        if(m_Points > highScore){
+            highScore = m_Points;
+            TextBox.SetActive(true);
+            
+            GameManager.Instance.Score = highScore;
+            GameManager.Instance.Name = WinnerName;
+            GameManager.Instance.SaveScore();
+        }
     }
 }
